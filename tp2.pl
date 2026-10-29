@@ -5,15 +5,26 @@
 % ----------------
 
 % esMatriz(+ListaDeListas)
-esMatriz(_) :- completar("Ejercicio 1").
+esMatriz([]).
+esMatriz([[]]).
+esMatriz([[_|_]]).
+esMatriz([A, B | XS]) :-
+  length(A, Len),
+  length(B, Len),
+  esMatriz([B | XS]).
 
 % ----------------
 % Ejercicio 2
 % ----------------
 
+head([X | _], X).
+
 % tamaño(+Matriz, -Filas, -Columnas)
 % Precondición: esMatriz(Matriz)
-tamaño(_, _, _) :- completar("Ejercicio 2").
+tamaño(M, F, C) :-
+  length(M, F),
+  head(M,H),
+  length(H, C).
 
 % ----------------
 % Ejercicio 3
@@ -21,7 +32,14 @@ tamaño(_, _, _) :- completar("Ejercicio 2").
 
 % coordenadaEnRango(+Matriz, +Coordenada)
 % Precondición: esMatriz(Matriz)
-coordenadaEnRango(_, _) :- completar("Ejercicio 3").
+coordenadaEnRango(M, [F, C]) :-
+  tamaño(M, TF, TC),
+  F >= 1,
+  C >= 1,
+  F =< TF,
+  C =< TC.
+
+% TODO: Es este predicado reversible en alguno de sus argumentos? Justifique?
 
 % ----------------
 % Observadores de tablero.
