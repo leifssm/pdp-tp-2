@@ -17,13 +17,14 @@ esMatriz([A, B | XS]) :-
 % Ejercicio 2
 % ----------------
 
+head([], []).
 head([X | _], X).
 
 % tamaño(+Matriz, -Filas, -Columnas)
 % Precondición: esMatriz(Matriz)
 tamaño(M, F, C) :-
   length(M, F),
-  head(M,H),
+  head(M, H),
   length(H, C).
 
 % ----------------
@@ -32,7 +33,7 @@ tamaño(M, F, C) :-
 
 % coordenadaEnRango(+Matriz, +Coordenada)
 % Precondición: esMatriz(Matriz)
-coordenadaEnRango(M, [F, C]) :-
+coordenadaEnRango(M, (F, C)) :-
   tamaño(M, TF, TC),
   F >= 1,
   C >= 1,
@@ -78,9 +79,22 @@ color(T, Color, Coordenada) :-
 % Ejercicio 4.a)
 % ----------------
 
+filaConPosiciónLiberada([_ | T], 1, [libre | T]).
+filaConPosiciónLiberada([X | T1], CIndex, [X | T2]) :-
+  CIndex > 1,
+  CIndex1 is CIndex - 1,
+  filaConPosiciónLiberada(T1, CIndex1, T2).
+
 % tableroConPosiciónLiberada(+Tablero, +Coordenada, -TableroLiberado)
 % Precondición: esMatriz(Tablero), coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
+tableroConPosiciónLiberada([F | T], (1, CIndex), [F2 | T]) :-
+  filaConPosiciónLiberada(F, CIndex, F2).
+tableroConPosiciónLiberada([F | T1], (FIndex, CIndex), [F | T2]) :-
+  FIndex > 1,
+  FIndex1 is FIndex - 1,
+  tableroConPosiciónLiberada(T1, (FIndex1, CIndex), T2).
+
+
 
 % ----------------
 % Ejercicio 4.b)
@@ -89,7 +103,10 @@ tableroConPosiciónLiberada(_, _, _) :- completar("Ejercicio 4.a").
 % tableroConPosicionesLiberadas(+Tablero, +Posiciones, -TableroLiberado)
 % Precondición: esMatriz(Tablero).
 % Precondición: para cada Coordenada en Posiciones: coordenadaEnRango(Tablero, Coordenada), not(libre(Tablero, Coordenada)).
-tableroConPosicionesLiberadas(_, _, _) :- completar("Ejercicio 4.b").
+tableroConPosicionesLiberadas(T, [], T).
+tableroConPosicionesLiberadas(T, [P | PT], TL) :-
+  tableroConPosiciónLiberada(T, P, TAux),
+  tableroConPosicionesLiberadas(TAux, PT, TL).
 
 % ----------------
 % Operaciones sobre coordenadas.
